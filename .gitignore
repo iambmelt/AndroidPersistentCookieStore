@@ -1,0 +1,24 @@
+# builds
+*.apk
+*.ap_
+
+# dexer files
+*.dex
+
+# compiled files
+*.class
+
+# generated files
+bin/
+gen/
+out/
+
+# local files
+local.properties
+
+# Eclipse project files
+.classpath
+.project
+
+# svn files
+.svn
