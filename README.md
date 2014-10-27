@@ -42,6 +42,16 @@ Who's using APCS?
 --
 Shoot me an email! I'll link your project or app here.
 
+<table>
+    <tr>
+        <td width="150" align="center">
+            <a title="McGraw-Hill Education Texas" href="https://play.google.com/store/apps/details?id=com.mheducation.cedmobile&hl=en" rel="nofollow"><img src="http://i.imgur.com/o0qKBK4.png" width="80" height="80"></a>
+            <br>
+            McGraw-Hill Education Texas
+        </td>
+    </tr>
+</table>
+
 License
 --
    Copyright 2014 Brian Melton
