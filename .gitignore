@@ -19,6 +19,8 @@ local.properties
 # Eclipse project files
 .classpath
 .project
+.metadata
+.settings
 
 # svn files
 .svn

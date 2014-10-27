@@ -40,245 +40,280 @@ import com.brianjmelton.apcs.vo.SerializableCookie;
  */
 public class PersistentCookieStore implements CookieStore {
 
-    private final CookieStore store;
-    private final Persister persister;
-    private final PersistenceExceptionHandler exceptionHandler;
-    private final String LOG_TAG;
-    private final boolean logVerbose, logErrors;
+	private final CookieStore store;
+	private final Persister persister;
+	private final PersistenceExceptionHandler exceptionHandler;
+	private final String LOG_TAG;
+	private final boolean logVerbose, logErrors;
 
-    protected PersistentCookieStore(CookieStore store, Persister persister,
-            PersistenceExceptionHandler exceptionHandler, String LOG_TAG,
-            boolean logVerbose, boolean logErrors) {
-        this.store = store;
-        this.persister = persister;
-        this.exceptionHandler = exceptionHandler;
-        this.LOG_TAG = LOG_TAG;
-        this.logVerbose = logVerbose;
-        this.logErrors = logErrors;
-        restore();
-    }
+	protected PersistentCookieStore(CookieStore store, Persister persister,
+			PersistenceExceptionHandler exceptionHandler, String LOG_TAG,
+			boolean logVerbose, boolean logErrors) {
+		this.store = store;
+		this.persister = persister;
+		this.exceptionHandler = exceptionHandler;
+		this.LOG_TAG = LOG_TAG;
+		this.logVerbose = logVerbose;
+		this.logErrors = logErrors;
+		restore();
+	}
 
-    public static class Builder {
+	/**
+	 * Builder-pattern Object creator to stop icky telescoping-constructor calls
+	 * 
+	 */
+	public static class Builder {
 
-        private CookieStore store;
-        private Persister persister;
-        private PersistenceExceptionHandler exceptionHandler;
-        private String logTag;
-        private boolean logVerbose, logErrors;
+		private CookieStore store;
+		private Persister persister;
+		private PersistenceExceptionHandler exceptionHandler;
+		private String logTag;
+		private boolean logVerbose, logErrors;
 
-        public Builder useCookieStore(CookieStore cookiestore) {
-            if (null == cookiestore) {
-                throw new IllegalArgumentException(
-                        "Cookiestore cannot be null.");
-            }
-            this.store = cookiestore;
-            return this;
-        }
+		/**
+		 * The in-memory CookieStore this PersistentCookieStore will bind to in
+		 * order to replicate
+		 * 
+		 * @param cookiestore
+		 * @return a reference to this Builder
+		 */
+		public Builder useCookieStore(CookieStore cookiestore) {
+			if (null == cookiestore) {
+				throw new IllegalArgumentException(
+						"Cookiestore cannot be null.");
+			}
+			this.store = cookiestore;
+			return this;
+		}
 
-        public Builder usePersister(Persister persister) {
-            if (null == persister) {
-                throw new IllegalArgumentException("Persister cannot be null");
-            }
-            this.persister = persister;
-            return this;
-        }
+		/**
+		 * The {@link Persister} this {@link CookieStore} subclass should
+		 * delegate to for the actual persisting
+		 * 
+		 * @param persister
+		 * @return a reference to this Builder
+		 */
+		public Builder usePersister(Persister persister) {
+			if (null == persister) {
+				throw new IllegalArgumentException("Persister cannot be null");
+			}
+			this.persister = persister;
+			return this;
+		}
 
-        public Builder logWithTag(String logTag) {
-            if (null == logTag) {
-                this.logTag = "PersistenCookieStore";
-            }
-            this.logTag = logTag;
-            return this;
-        }
+		/**
+		 * If logging is enabled, log statements will be logged using the
+		 * supplied tag.
+		 * 
+		 * @param logTag
+		 *            the log tag to use
+		 * @return a reference to this Builder
+		 */
+		public Builder logWithTag(String logTag) {
+			if (null == logTag) {
+				this.logTag = "PersistentCookieStore";
+			}
+			this.logTag = logTag;
+			return this;
+		}
 
-        public Builder throwTo(PersistenceExceptionHandler exceptionHandler) {
-            if (null == exceptionHandler) {
-                throw new IllegalArgumentException(
-                        "ExceptionHandler cannot be null");
-            }
-            this.exceptionHandler = exceptionHandler;
-            return this;
-        }
+		/**
+		 * The {@link PersistenceExceptionHandler} to which {@link Exception}s
+		 * will be thrown.
+		 * 
+		 * @param exceptionHandler
+		 * @return a reference to this Builder
+		 */
+		public Builder throwTo(PersistenceExceptionHandler exceptionHandler) {
+			if (null == exceptionHandler) {
+				throw new IllegalArgumentException(
+						"ExceptionHandler cannot be null");
+			}
+			this.exceptionHandler = exceptionHandler;
+			return this;
+		}
 
-        public Builder logVerbose() {
-            this.logVerbose = true;
-            this.logErrors = true;
-            return this;
-        }
+		/**
+		 * Log CookieStore actions, verbosely. Mostly boring things.
+		 * 
+		 * @return a reference to this Builder
+		 */
+		public Builder logVerbose() {
+			this.logVerbose = true;
+			this.logErrors = true;
+			return this;
+		}
 
-        public Builder logErrors() {
-            this.logErrors = true;
-            return this;
-        }
+		/**
+		 * Log errors, {@link Exception}s, etc. General problem things.
+		 * 
+		 * @return a reference to this Builder
+		 */
+		public Builder logErrors() {
+			this.logErrors = true;
+			return this;
+		}
 
-        public PersistentCookieStore build() {
-            checkInitParams();
-            if (logVerbose) {
-                Log.v(logTag, "Creating new PersistentCookieStore...");
-            }
-            return new PersistentCookieStore(store, persister,
-                    exceptionHandler, logTag, logVerbose, logErrors);
-        }
+		/**
+		 * Creates a {@link PersistentCookieStore} with the arguments supplied
+		 * to this {@link Builder}
+		 * 
+		 * @return the constructed {@link PersistentCookieStore}
+		 */
+		public PersistentCookieStore build() {
+			checkInitParams();
+			if (logVerbose) {
+				Log.v(logTag, "Creating new PersistentCookieStore...");
+			}
+			return new PersistentCookieStore(store, persister,
+					exceptionHandler, logTag, logVerbose, logErrors);
+		}
 
-        private void checkInitParams() {
-            String msg;
-            if (null == store) {
-                msg = "Cookie store ";
-            } else if (null == persister) {
-                msg = "Persister ";
-            } else if (null == exceptionHandler) {
-                msg = "ExceptionHandler ";
-            } else if (null == logTag) {
-                msg = "LOG_TAG ";
-            } else {
-                return;
-            }
-            throw new IllegalStateException(msg
-                    + "cannot be null.");
-        }
-    }
+		/**
+		 * Verifies that the supplied arguments make sense.
+		 */
+		private void checkInitParams() {
+			String msg;
+			if (null == store) {
+				msg = "Cookie store ";
+			} else if (null == persister) {
+				msg = "Persister ";
+			} else if (null == exceptionHandler) {
+				msg = "ExceptionHandler ";
+			} else if (null == logTag) {
+				msg = "LOG_TAG ";
+			} else {
+				return;
+			}
+			throw new IllegalStateException(msg + "cannot be null.");
+		}
+	}
 
-    @Override
-    public synchronized void add(URI uri, HttpCookie cookie) {
-        if (logVerbose) {
-            Log.i(LOG_TAG, "add(URI "
-                    + uri
-                    + ", HttpCookie "
-                    + cookie
-                    + ")");
-        }
+	@Override
+	public synchronized void add(URI uri, HttpCookie cookie) {
+		if (logVerbose) {
+			Log.i(LOG_TAG, "add(URI " + uri + ", HttpCookie " + cookie + ")");
+		}
 
-        store.add(uri, cookie);
+		store.add(uri, cookie);
 
-        persist();
-    }
+		persist();
+	}
 
-    @Override
-    public List<HttpCookie> get(URI uri) {
-        List<HttpCookie> cookies = store.get(uri);
+	@Override
+	public List<HttpCookie> get(URI uri) {
+		List<HttpCookie> cookies = store.get(uri);
 
-        if (logVerbose) {
-            Log.i(LOG_TAG, "get(URI "
-                    + uri
-                    + ") - "
-                    + cookies);
-        }
+		if (logVerbose) {
+			Log.i(LOG_TAG, "get(URI " + uri + ") - " + cookies);
+		}
 
-        return cookies;
-    }
+		return cookies;
+	}
 
-    @Override
-    public List<HttpCookie> getCookies() {
-        List<HttpCookie> cookies = store.getCookies();
+	@Override
+	public List<HttpCookie> getCookies() {
+		List<HttpCookie> cookies = store.getCookies();
 
-        if (logVerbose) {
-            Log.i(LOG_TAG, "getCookies() - "
-                    + cookies);
-        }
+		if (logVerbose) {
+			Log.i(LOG_TAG, "getCookies() - " + cookies);
+		}
 
-        return cookies;
-    }
+		return cookies;
+	}
 
-    @Override
-    public List<URI> getURIs() {
-        List<URI> uris = store.getURIs();
+	@Override
+	public List<URI> getURIs() {
+		List<URI> uris = store.getURIs();
 
-        if (logVerbose) {
-            Log.i(LOG_TAG, "getURIs() - "
-                    + uris.toString());
-        }
+		if (logVerbose) {
+			Log.i(LOG_TAG, "getURIs() - " + uris.toString());
+		}
 
-        return uris;
-    }
+		return uris;
+	}
 
-    @Override
-    public synchronized boolean remove(URI uri, HttpCookie cookie) {
-        boolean removed = store.remove(uri, cookie);
+	@Override
+	public synchronized boolean remove(URI uri, HttpCookie cookie) {
+		boolean removed = store.remove(uri, cookie);
 
-        if (logVerbose) {
-            Log.i(LOG_TAG, "remove(URI "
-                    + uri
-                    + ", HttpCookie "
-                    + cookie
-                    + ") - "
-                    + removed);
-        }
+		if (logVerbose) {
+			Log.i(LOG_TAG, "remove(URI " + uri + ", HttpCookie " + cookie
+					+ ") - " + removed);
+		}
 
-        if (removed) {
-            persist();
-        }
+		if (removed) {
+			persist();
+		}
 
-        return removed;
-    }
+		return removed;
+	}
 
-    @Override
-    public synchronized boolean removeAll() {
-        boolean allRemoved = store.removeAll();
+	@Override
+	public synchronized boolean removeAll() {
+		boolean allRemoved = store.removeAll();
 
-        if (logVerbose) {
-            Log.i(LOG_TAG, "removeAll() - "
-                    + allRemoved);
-        }
+		if (logVerbose) {
+			Log.i(LOG_TAG, "removeAll() - " + allRemoved);
+		}
 
-        if (allRemoved) {
-            persist();
-        }
+		if (allRemoved) {
+			persist();
+		}
 
-        return allRemoved;
-    }
+		return allRemoved;
+	}
 
-    private void persist() {
-        try {
-            persister.persist(exportCookies());
-        } catch (PersistenceException e) {
+	private void persist() {
+		try {
+			persister.persist(exportCookies());
+		} catch (PersistenceException e) {
 
-            if (logErrors) {
-                e.printStackTrace();
-            }
+			if (logErrors) {
+				e.printStackTrace();
+			}
 
-            exceptionHandler.onPersistFailure(new PersistenceException(e));
-        }
-    }
+			exceptionHandler.onPersistFailure(new PersistenceException(e));
+		}
+	}
 
-    private void restore() {
-        try {
-            importCookies(persister.restore());
-        } catch (PersistenceException e) {
+	private void restore() {
+		try {
+			importCookies(persister.restore());
+		} catch (PersistenceException e) {
 
-            if (logErrors) {
-                e.printStackTrace();
-            }
+			if (logErrors) {
+				e.printStackTrace();
+			}
 
-            exceptionHandler.onRestoreFailure(e);
-        }
-    }
+			exceptionHandler.onRestoreFailure(e);
+		}
+	}
 
-    private void importCookies(
-            Map<URI, List<SerializableCookie>> cookiesToRestore) {
-        Map<URI, List<HttpCookie>> restoredCookies =
-                new HashMap<URI, List<HttpCookie>>();
-        if (null != cookiesToRestore) {
-            for (URI uri : cookiesToRestore.keySet()) {
-                restoredCookies.put(uri, SerializableHttpCookieAdapter
-                        .deserialize(cookiesToRestore.get(uri)));
-            }
-            for (URI uri : restoredCookies.keySet()) {
-                for (HttpCookie cookie : restoredCookies.get(uri)) {
-                    store.add(uri, cookie);
-                }
-            }
-        }
+	private void importCookies(
+			Map<URI, List<SerializableCookie>> cookiesToRestore) {
+		Map<URI, List<HttpCookie>> restoredCookies = new HashMap<URI, List<HttpCookie>>();
+		if (null != cookiesToRestore) {
+			for (URI uri : cookiesToRestore.keySet()) {
+				restoredCookies.put(uri, SerializableHttpCookieAdapter
+						.deserialize(cookiesToRestore.get(uri)));
+			}
+			for (URI uri : restoredCookies.keySet()) {
+				for (HttpCookie cookie : restoredCookies.get(uri)) {
+					store.add(uri, cookie);
+				}
+			}
+		}
 
-    }
+	}
 
-    private Map<URI, List<SerializableCookie>> exportCookies() {
-        Map<URI, List<SerializableCookie>> preserializedCookies =
-                new HashMap<URI, List<SerializableCookie>>();
-        for (URI uri : store.getURIs()) {
-            preserializedCookies.put(uri,
-                    SerializableHttpCookieAdapter.serialize(store.get(uri)));
-        }
-        return preserializedCookies;
-    }
+	private Map<URI, List<SerializableCookie>> exportCookies() {
+		Map<URI, List<SerializableCookie>> preserializedCookies = new HashMap<URI, List<SerializableCookie>>();
+		for (URI uri : store.getURIs()) {
+			preserializedCookies.put(uri,
+					SerializableHttpCookieAdapter.serialize(store.get(uri)));
+		}
+		return preserializedCookies;
+	}
 
 }

@@ -30,47 +30,51 @@ import com.brianjmelton.apcs.vo.SerializableCookie;
  */
 public class SerializableHttpCookieAdapter {
 
-    public static HttpCookie deserialize(SerializableCookie sCookie) {
-        if (null == sCookie) {
-            throw new IllegalArgumentException(
-                    "Cannot deserialize a null Cookie");
-        }
-        HttpCookie realCookie =
-                new HttpCookie(sCookie.getName(), sCookie.getValue());
+	public static HttpCookie deserialize(SerializableCookie sCookie) {
+		if (null == sCookie) {
+			throw new IllegalArgumentException(
+					"Cannot deserialize a null Cookie");
+		}
+		HttpCookie realCookie = new HttpCookie(sCookie.getName(),
+				sCookie.getValue());
 
-        realCookie.setDiscard(sCookie.getDiscard());
-        realCookie.setSecure(sCookie.isSecure());
-        realCookie.setMaxAge(sCookie.getMaxAge());
-        realCookie.setVersion(sCookie.getVersion());
-        realCookie.setComment(sCookie.getComment());
-        realCookie.setCommentURL(sCookie.getCommentURL());
-        realCookie.setDomain(sCookie.getDomain());
-        realCookie.setPath(sCookie.getPath());
-        realCookie.setPortlist(sCookie.getPortlist());
+		realCookie.setDiscard(sCookie.getDiscard());
+		realCookie.setSecure(sCookie.isSecure());
+		realCookie.setMaxAge(sCookie.getMaxAge());
+		realCookie.setVersion(sCookie.getVersion());
+		realCookie.setComment(sCookie.getComment());
+		realCookie.setCommentURL(sCookie.getCommentURL());
+		realCookie.setDomain(sCookie.getDomain());
+		realCookie.setPath(sCookie.getPath());
+		realCookie.setPortlist(sCookie.getPortlist());
 
-        return realCookie;
-    }
+		return realCookie;
+	}
 
-    public static List<HttpCookie> deserialize(
-            List<SerializableCookie> cookiesIn) {
-        List<HttpCookie> cookiesOut = new ArrayList<HttpCookie>();
-        for (SerializableCookie serializedCookie : cookiesIn) {
-            cookiesOut.add(deserialize(serializedCookie));
-        }
-        return cookiesOut;
-    }
+	/**
+	 * Transformer method for derserializing {@link SerializableCookie}s into
+	 * {@link HttpCookie}s
+	 * 
+	 * @param cookiesIn
+	 * @return
+	 */
+	public static List<HttpCookie> deserialize(
+			List<SerializableCookie> cookiesIn) {
+		List<HttpCookie> cookiesOut = new ArrayList<HttpCookie>();
 
-    public static SerializableCookie serialize(HttpCookie in) {
-        return new SerializableCookie(in);
-    }
+		for (SerializableCookie serializedCookie : cookiesIn) {
+			cookiesOut.add(deserialize(serializedCookie));
+		}
 
-    public static List<SerializableCookie> serialize(List<HttpCookie> cookiesIn) {
-        List<SerializableCookie> cookiesOut =
-                new ArrayList<SerializableCookie>();
-        for (HttpCookie cc : cookiesIn) {
-            cookiesOut.add(new SerializableCookie(cc));
-        }
-        return cookiesOut;
-    }
+		return cookiesOut;
+	}
+
+	public static List<SerializableCookie> serialize(List<HttpCookie> cookiesIn) {
+		List<SerializableCookie> cookiesOut = new ArrayList<SerializableCookie>();
+		for (HttpCookie cc : cookiesIn) {
+			cookiesOut.add(new SerializableCookie(cc));
+		}
+		return cookiesOut;
+	}
 
 }

@@ -25,9 +25,16 @@ package com.brianjmelton.apcs.exception;
  */
 public class PersistenceException extends Exception {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public PersistenceException(Throwable t) {
-        super(t);
-    }
+	/**
+	 * Constructs a new {@link PersistenceException} from the {@link Throwable}
+	 * which caused it
+	 * 
+	 * @param t
+	 *            the catalyst {@link Throwable} for this {@link Exception}
+	 */
+	public PersistenceException(Throwable t) {
+		super(t);
+	}
 }

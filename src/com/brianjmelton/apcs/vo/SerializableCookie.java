@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.net.HttpCookie;
 
 /**
- * Like a cookie, but non-final and allows for serialization.
+ * Like an {@link HttpCookie}, but non-final and allows for serialization.
  * 
  * @author brianmelton
  * @since July 2014
@@ -28,206 +28,221 @@ import java.net.HttpCookie;
  */
 public class SerializableCookie implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private boolean discard, secure, expired;
-    private long maxAge;
-    private int version;
-    private String comment, commentURL, domain, name, path, portlist, value;
+	private boolean discard, secure, expired;
+	private long maxAge;
+	private int version;
+	private String comment, commentURL, domain, name, path, portlist, value;
 
-    public SerializableCookie(final HttpCookie cookie) {
-        this.discard = cookie.getDiscard();
-        this.secure = cookie.getSecure();
-        this.expired = cookie.hasExpired();
-        this.maxAge = cookie.getMaxAge();
-        this.version = cookie.getVersion();
-        this.comment = cookie.getComment();
-        this.commentURL = cookie.getCommentURL();
-        this.domain = cookie.getDomain();
-        this.name = cookie.getName();
-        this.path = cookie.getPath();
-        this.portlist = cookie.getPortlist();
-        this.value = cookie.getValue();
-    }
+	/**
+	 * Constructs a new {@link SerializableCookie}
+	 * 
+	 * @param cookie
+	 */
+	public SerializableCookie(final HttpCookie cookie) {
+		this.discard = cookie.getDiscard();
+		this.secure = cookie.getSecure();
+		this.expired = cookie.hasExpired();
+		this.maxAge = cookie.getMaxAge();
+		this.version = cookie.getVersion();
+		this.comment = cookie.getComment();
+		this.commentURL = cookie.getCommentURL();
+		this.domain = cookie.getDomain();
+		this.name = cookie.getName();
+		this.path = cookie.getPath();
+		this.portlist = cookie.getPortlist();
+		this.value = cookie.getValue();
+	}
 
-    /**
-     * @return the discard
-     */
-    public boolean getDiscard() {
-        return discard;
-    }
+	/**
+	 * @return the discard
+	 */
+	public boolean getDiscard() {
+		return discard;
+	}
 
-    /**
-     * @param discard
-     *            the discard to set
-     */
-    public void setDiscard(boolean discard) {
-        this.discard = discard;
-    }
+	/**
+	 * @param discard
+	 *            the discard to set
+	 */
+	public void setDiscard(boolean discard) {
+		this.discard = discard;
+	}
 
-    /**
-     * @return the secure
-     */
-    public boolean isSecure() {
-        return secure;
-    }
+	/**
+	 * @return the secure
+	 */
+	public boolean isSecure() {
+		return secure;
+	}
 
-    /**
-     * @param secure
-     *            the secure to set
-     */
-    public void setSecure(boolean secure) {
-        this.secure = secure;
-    }
+	/**
+	 * @param secure
+	 *            the secure to set
+	 */
+	public void setSecure(boolean secure) {
+		this.secure = secure;
+	}
 
-    /**
-     * @return the expired
-     */
-    public boolean isExpired() {
-        return expired;
-    }
+	/**
+	 * @return the expired
+	 */
+	public boolean isExpired() {
+		return expired;
+	}
 
-    /**
-     * @param expired
-     *            the expired to set
-     */
-    public void setExpired(boolean expired) {
-        this.expired = expired;
-    }
+	/**
+	 * @param expired
+	 *            the expired to set
+	 */
+	public void setExpired(boolean expired) {
+		this.expired = expired;
+	}
 
-    /**
-     * @return the maxAge
-     */
-    public long getMaxAge() {
-        return maxAge;
-    }
+	/**
+	 * @return the maxAge
+	 */
+	public long getMaxAge() {
+		return maxAge;
+	}
 
-    /**
-     * @param maxAge
-     *            the maxAge to set
-     */
-    public void setMaxAge(long maxAge) {
-        this.maxAge = maxAge;
-    }
+	/**
+	 * @param maxAge
+	 *            the maxAge to set
+	 */
+	public void setMaxAge(long maxAge) {
+		this.maxAge = maxAge;
+	}
 
-    /**
-     * @return the version
-     */
-    public int getVersion() {
-        return version;
-    }
+	/**
+	 * @return the version
+	 */
+	public int getVersion() {
+		return version;
+	}
 
-    /**
-     * @param version
-     *            the version to set
-     */
-    public void setVersion(int version) {
-        this.version = version;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(int version) {
+		this.version = version;
+	}
 
-    /**
-     * @return the comment
-     */
-    public String getComment() {
-        return comment;
-    }
+	/**
+	 * @return the comment
+	 */
+	public String getComment() {
+		return comment;
+	}
 
-    /**
-     * @param comment
-     *            the comment to set
-     */
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+	/**
+	 * @param comment
+	 *            the comment to set
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
-    /**
-     * @return the commentURL
-     */
-    public String getCommentURL() {
-        return commentURL;
-    }
+	/**
+	 * @return the commentURL
+	 */
+	public String getCommentURL() {
+		return commentURL;
+	}
 
-    /**
-     * @param commentURL
-     *            the commentURL to set
-     */
-    public void setCommentURL(String commentURL) {
-        this.commentURL = commentURL;
-    }
+	/**
+	 * @param commentURL
+	 *            the commentURL to set
+	 */
+	public void setCommentURL(String commentURL) {
+		this.commentURL = commentURL;
+	}
 
-    /**
-     * @return the domain
-     */
-    public String getDomain() {
-        return domain;
-    }
+	/**
+	 * @return the domain
+	 */
+	public String getDomain() {
+		return domain;
+	}
 
-    /**
-     * @param domain
-     *            the domain to set
-     */
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
+	/**
+	 * @param domain
+	 *            the domain to set
+	 */
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * @return the path
-     */
-    public String getPath() {
-        return path;
-    }
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
 
-    /**
-     * @param path
-     *            the path to set
-     */
-    public void setPath(String path) {
-        this.path = path;
-    }
+	/**
+	 * @param path
+	 *            the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
+	}
 
-    /**
-     * @return the portlist
-     */
-    public String getPortlist() {
-        return portlist;
-    }
+	/**
+	 * @return the portlist
+	 */
+	public String getPortlist() {
+		return portlist;
+	}
 
-    /**
-     * @param portlist
-     *            the portlist to set
-     */
-    public void setPortlist(String portlist) {
-        this.portlist = portlist;
-    }
+	/**
+	 * @param portlist
+	 *            the portlist to set
+	 */
+	public void setPortlist(String portlist) {
+		this.portlist = portlist;
+	}
 
-    /**
-     * @return the value
-     */
-    public String getValue() {
-        return value;
-    }
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
 
-    /**
-     * @param value
-     *            the value to set
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
+	/**
+	 * @param value
+	 *            the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * Static constructor for {@link SerializableCookie}s
+	 * 
+	 * @param in
+	 * @return
+	 */
+	public static SerializableCookie serialize(HttpCookie in) {
+		return new SerializableCookie(in);
+	}
 
 }

@@ -32,18 +32,18 @@ import com.brianjmelton.apcs.vo.SerializableCookie;
  */
 public class DefaultPersistentCookieStore extends PersistentCookieStore {
 
-    /**
-     * Constructs a new instance of DefaultPersistsCookieStore.
-     * 
-     * @param pathToCookieFile
-     *            the path to the {@link SerializableCookie} storage file you
-     *            would like to use. If this file doesn't exist it will be
-     *            created.
-     */
-    public DefaultPersistentCookieStore(File pathToCookieFile) {
-        super(new CookieManager().getCookieStore(),
-                new BasicCookieStoreSerializer(pathToCookieFile),
-                new StubPersistenceExceptionHandler(),
-                "DefaultPersistentCookieStore", false, true);
-    }
+	/**
+	 * Constructs a new instance of DefaultPersistsCookieStore.
+	 * 
+	 * @param pathToCookieFile
+	 *            the path to the {@link SerializableCookie} storage file you
+	 *            would like to use. If this file doesn't exist it will be
+	 *            created.
+	 */
+	public DefaultPersistentCookieStore(File pathToCookieFile) {
+		super(new CookieManager().getCookieStore(),
+				new BasicCookieStoreSerializer(pathToCookieFile),
+				new StubPersistenceExceptionHandler(),
+				"DefaultPersistentCookieStore", false, true);
+	}
 }
