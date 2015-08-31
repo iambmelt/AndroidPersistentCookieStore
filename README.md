@@ -28,11 +28,11 @@ Version
 
 Release notes
 --
-Consider this project in alpha. Tests, build-automation, Travis CI all coming soon. YOU CAN HELP!
+Consider this project in alpha. 
 
 Get going!
 --
-To start using APCS, in your app's android.app.Application subclass type:
+To start using APCS, in your app's ```android.app.Application``` subclass type:
 ```java
 CookieManager cookieManager = 
     new CookieManager(new DefaultPersistentCookieStore(new File(
