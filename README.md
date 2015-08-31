@@ -2,6 +2,8 @@
 
 AndroidPersistentCookieStore is deprecated and no longer being actively developed.
 
+For a comprehensive gradle-enabled solution, check out [loopj/android-async-http](https://github.com/loopj/android-async-http).
+
 AndroidPersistentCookieStore
 =========
 
