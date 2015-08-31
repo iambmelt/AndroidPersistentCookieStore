@@ -1,3 +1,7 @@
+# DEPRECATED
+
+AndroidPersistentCookieStore is deprecated and no longer being actively developed.
+
 AndroidPersistentCookieStore
 =========
 
