@@ -11,16 +11,11 @@ A customizable thread-safe java.net.* based cookie persistence toolkit.
 
 Key features
 --
-  - Swappable components
-    * You can choose which java.net.CookieStore implementation you want to use to manage in-memory Cookies.
-    * BYO-Persistence (if you want!)
-    * Supply your own exception handler
+  - Fully configurable
+    * Persistence
+    * Exception handling
   - Thread safe
-    * Synchronized constructive & destructive transactions
-    * Non-blocking read operations
-  - Transparency
-    * Logs silently, verbosely, or on errors.
-    * Open-source!
+  - Log silently, verbosely, or on errors.
 
 Version
 --
